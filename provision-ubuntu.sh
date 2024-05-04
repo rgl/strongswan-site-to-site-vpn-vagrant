@@ -7,11 +7,30 @@ if  [ "$(hostname)" = 'moon-ubuntu' ]; then
 local='moon-ubuntu'
 remote='sun-ubuntu'
 remote_ip='10.2.0.4'
+remote_net='10.2.0.0/16'
+remote_net_gw='10.1.0.2'
 else
 local='sun-ubuntu'
 remote='moon-ubuntu'
 remote_ip='10.1.0.4'
+remote_net='10.1.0.0/16'
+remote_net_gw='10.2.0.2'
 fi
+
+# route the remote network thru the vpn device.
+# NB this is only required because we are not setting this machine default
+#    gateway (which is managed by vagrant).
+cat >/etc/netplan/51-local.yaml <<EOF
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth1:
+      routes:
+        - to: $remote_net
+          via: $remote_net_gw
+EOF
+netplan apply
 
 # install node LTS.
 # see https://github.com/nodesource/distributions#debinstall

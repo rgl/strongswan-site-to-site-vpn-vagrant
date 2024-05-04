@@ -17,6 +17,14 @@ remote_ts='10.1.0.0/16'
 remote_ip='10.1.0.2'
 fi
 
+
+#
+# enable IPv4 forwarding.
+
+sed -i -E 's,^\s*#?\s*(net.ipv4.ip_forward=).+,\11,g' /etc/sysctl.conf
+sysctl net.ipv4.ip_forward=1
+
+
 #
 # install the strongswan charon daemon (has native systemd integration).
 # NB do not install the strongswan package as it will use the legacy stuff (e.g. ipsec.conf).
