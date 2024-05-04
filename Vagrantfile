@@ -26,13 +26,6 @@ Vagrant.configure('2') do |config|
     config.vm.synced_folder '.', '/vagrant', type: 'nfs'
   end
 
-  config.vm.provider :virtualbox do |vb|
-    vb.linked_clone = true
-    vb.memory = 512
-    vb.cpus = 2
-    vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
-  end
-
   config.vm.define 'moon' do |config|
     config.vm.hostname = config_moon_fqdn
     config.vm.network :private_network, ip: config_moon_ip, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false
