@@ -15,15 +15,16 @@ config_sun_ubuntu_fqdn  = "sun-ubuntu.#{config_sun_fqdn}"
 config_sun_ubuntu_ip    = '10.2.0.4'
 
 Vagrant.configure('2') do |config|
-  config.vm.box = 'ubuntu-18.04-amd64'
+  config.vm.box = 'ubuntu-22.04-amd64'
 
   config.vm.provider :libvirt do |lv, config|
-    lv.memory = 512
+    lv.memory = 1024
     lv.cpus = 2
     lv.cpu_mode = 'host-passthrough'
     # lv.nested = true
     lv.keymap = 'pt'
-    config.vm.synced_folder '.', '/vagrant', type: 'nfs'
+    lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
+    config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
   end
 
   config.vm.define 'moon' do |config|
